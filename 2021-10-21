@@ -1,0 +1,51 @@
+pacman::p_load(tidyverse, tidytuesdayR, janitor)
+tuesdata <- tidytuesdayR::tt_load('2021-10-05')
+options(scipen = 999)
+nurses <- tuesdata$nurses
+rm(tuesdata)
+
+nurses <- clean_names(nurses)
+names(nurses)
+head(nurses,10)
+nurses %>% count(year) #1998-2020
+
+
+total_rn <- nurses %>%
+  select(state,year,total_employed_rn)
+
+#number of nurses by state, by year
+
+all_dates_plot <- total_rn %>%
+  ggplot(aes(x = year, y = total_employed_rn)) +
+  geom_line() +
+  facet_wrap(~state, scales = "free_y") + 
+  theme_bw() +
+  theme(panel.background = element_rect(fill = 'Khaki2')) +2)
+  theme(strip.text = element_text(face="bold")) + 
+  scale_x_continuous(breaks = c(2000,2010,2020),
+                     labels = c("2000","2010", "2020")) +
+  labs(title = "Number of registered nurses by US State",
+       subtitle = "Data from 1998 -2020") +
+  xlab("") +
+  ylab("Number of registered nurses")
+
+all_dates_plot
+
+#number of nurses, last five years by state
+  
+last_five_years <- total_rn %>%
+  filter(year > 2015) %>%
+  ggplot(aes(x = year, y = total_employed_rn)) +
+  geom_line() +
+  facet_wrap(~state, scales = "free_y") + 
+  theme_bw() +
+  theme(panel.background = element_rect(fill = 'Khaki2')) +
+  theme(strip.text = element_text(face="bold")) + 
+  scale_x_continuous(breaks = c(2016,2018,2020),
+                     labels = c("2016","2018", "2020")) +
+  labs(title = "Number of registered nurses by US State",
+       subtitle = "Data: 2016-2020") +
+  xlab("") +
+  ylab("")
+
+last_five_years
