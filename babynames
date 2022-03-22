@@ -1,0 +1,32 @@
+#load tidyverse and get the data
+
+library(tidyverse)
+babynames <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-22/babynames.csv')
+
+#seperate male and female names
+
+all_f <- babynames %>%
+  filter(sex == "F")
+all_m <- babynames %>%
+  filter(sex == "M")
+
+#create top 500 of each sex for use in word cloud
+
+cloud_m <- head(all_m, 500) %>%
+  summarise(name, n)
+cloud_f <- head(all_f, 500) %>%
+  summarise(name, n)
+  
+#install wordcloud package
+
+install.packages("wordcloud")
+library(wordcloud)
+
+#create wordclouds
+
+m <- wordcloud(words = cloud_m$name, freq = cloud_m$n, min.freq = 1,
+          max.words=500, random.order=FALSE, rot.per=0.35,
+          colors=brewer.pal(8, "Dark2"))
+f <- wordcloud(words = cloud_f$name, freq = cloud_f$n, min.freq = 1,
+          max.words=500, random.order=FALSE, rot.per=0.35,
+          colors=brewer.pal(8, "Dark2"))
